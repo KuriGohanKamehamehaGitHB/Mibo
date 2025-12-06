@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IT Новости — Главная</title>
+  <style>
+    :root{
+      --bg:#0f1724; --card:#0b1220; --accent:#6ee7b7; --muted:#9aa7b8; --glass: rgba(255,255,255,0.04);
+      --max-width:1200px; --radius:14px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    *{box-sizing:border-box}
+    body{margin:0; background:linear-gradient(180deg,var(--bg) 0%, #071023 100%); color:#e6eef6; -webkit-font-smoothing:antialiased}
+
+    .container{max-width:var(--max-width); margin:36px auto; padding:24px}
+
+    /* Шапка */
+    header{display:flex;align-items:center;gap:18px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo .mark{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#4fd1c5);display:flex;align-items:center;justify-content:center;font-weight:700;color:#04202b}
+    .logo h1{margin:0;font-size:20px;letter-spacing:0.2px}
+    .logo p{margin:0;font-size:12px;color:var(--muted)}
+
+    /* Описание сайта */
+    .lead{margin-top:22px;background:var(--glass);padding:18px;border-radius:12px;display:flex;flex-direction:column;gap:8px}
+    .lead h2{margin:0;font-size:18px}
+    .lead p{margin:0;color:var(--muted);line-height:1.45}
+
+    /* Контейнер карточек */
+    .grid{display:flex;flex-wrap:wrap;gap:18px;margin-top:22px;justify-content:center}
+
+    /* Карточка */
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);display:flex;flex-direction:column;min-height:320px;flex:0 1 340px;max-width:340px;width:100%}
+
+    /* Обертка для картинки */
+    .media{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:linear-gradient(90deg,#0b1220,#071023)}
+    .media img{width:100%;height:100%;object-fit:cover;display:block}
+
+    .card-body{padding:14px;display:flex;flex-direction:column;gap:10px;flex:1}
+    .title{font-size:16px;font-weight:600;line-height:1.25}
+    .meta{color:var(--muted);font-size:13px}
+    .description{margin-top:auto;color:var(--muted);font-size:14px}
+
+    @media (min-width:900px){
+      .card{flex-basis:340px}
+      .grid{justify-content:flex-start}
+    }
+
+    @media (max-width:520px){
+      .container{padding:16px;margin:18px auto}
+      .logo .mark{width:48px;height:48px}
+      .lead{padding:14px}
+      .card{flex-basis:100%;max-width:100%;width:100%;min-height:300px}
+      .title{font-size:15px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <div class="mark">IT</div>
+        <div>
+          <h1>IT Новости</h1>
+          <p>Коротко о главном в мире технологий</p>
+        </div>
+      </div>
+    </header>
+
+    <section class="lead">
+      <h2>О сайте</h2>
+      <p>Здесь — свежие, честные и понятные новости об IT. Мы отбираем важное и объясняем без воды.</p>
+    </section>
+
+    <main class="grid" aria-live="polite">
+
+      <!-- Цикл Django для вывода новостей -->
+      {% for article in articles %}
+      <article class="card" aria-label="{{ article.title }}">
+        <div class="media">
+          <!-- Выводим картинку из ссылки -->
+          <img src="{{ article.image_url }}" alt="{{ article.title }}"/>
+        </div>
+        <div class="card-body">
+          <div class="title">{{ article.title }}</div>
+          <!-- Форматируем дату -->
+          <div class="meta">{{ article.release_date|date:"d E Y" }}</div>
+          
+          <!-- Обрезаем текст до 20 слов, чтобы карточка не была огромной -->
+          <div class="description">
+            {{ article.content|truncatewords:20 }}
+          </div>
+        </div>
+      </article>
+      {% empty %}
+        <!-- Если новостей нет -->
+        <p style="color: var(--muted); padding: 20px;">Новостей пока нет.</p>
+      {% endfor %}
+
+    </main>
+  </div>
+</body>
+</html>
